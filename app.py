@@ -1,23 +1,66 @@
 import openpyxl
 from PIL import Image, ImageDraw, ImageFont
 
-wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx')
+# Função para dividir o texto em várias linhas com base na largura máxima
+def quebra_texto(texto, fonte, largura_maxima, desenhar):
+    linhas = []
+    palavras = texto.split()
+    linha_atual = ""
+
+    for palavra in palavras:
+        linha_com_palavra = linha_atual + " " + palavra if linha_atual else palavra
+        largura_texto, altura_texto = desenhar.textbbox((0, 0), linha_com_palavra, font=fonte)[2:]
+
+        if largura_texto <= largura_maxima:
+            linha_atual = linha_com_palavra
+        else:
+            linhas.append(linha_atual)
+            linha_atual = palavra
+
+    if linha_atual:
+        linhas.append(linha_atual)
+
+    return linhas
+
+# Carregando a planilha com os valores calculados das fórmulas
+wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate (sheet_honorarios.iter_rows(min_row=2,max_row=2)):
-    empresa=linha[1].value #nome da empresa
-    valor=linha[2].value #valor em R$
-    mes=linha[3].value #mes de referencia
-    total=valor
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=2)):
+    empresa = linha[1].value  # nome da empresa
+    valor = linha[2].value  # valor em R$
+    mes = 'oct/24'
+    total = linha[21].value  # valor total calculado
+
+    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
+
+    image = Image.open('./honorario_padrao.jpg')
+    desenhar = ImageDraw.Draw(image)
+
+    # Definir a largura máxima permitida para o nome da empresa
+    largura_maxima_empresa = 800  # ajuste conforme necessário
+    coordenada_inicial_empresa = (340, 350)
+
+    # Sanitizar o nome da empresa para evitar problemas ao salvar o arquivo
+    empresa_sanitizada = empresa.replace("/", "").replace("\\", "").replace(":", "").replace("*", "")
+
+    # Dividir o nome da empresa em várias linhas, se necessário
+    linhas_empresa = quebra_texto(empresa_sanitizada, fonte_geral, largura_maxima_empresa, desenhar)
+
+    # Verificar se o texto excede a largura máxima e ajustar a posição Y se necessário
+    if len(linhas_empresa) > 1:  # Se houver mais de uma linha
+        coordenada_inicial_empresa = (340, 320)  # Ajusta Y (mais acima)
     
-    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf',50)
+    # Desenhar cada linha do nome da empresa, ajustando a altura
+    altura_linha = 60  # distância entre as linhas
+    for i, linha_empresa in enumerate(linhas_empresa):
+        desenhar.text((coordenada_inicial_empresa[0], coordenada_inicial_empresa[1] + i * altura_linha),
+                      linha_empresa, font=fonte_geral, fill='black')
 
-    image= Image.open('./honorario_padrao.jpg')
-    desenhar=ImageDraw.Draw(image)
+    # Desenhar outros valores na imagem
+    desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
+    desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
+    desenhar.text((850, 1050), str(total), font=fonte_geral, fill='black')
 
-    desenhar.text((840,550),str(valor),font=fonte_geral, fill='black')
-    desenhar.text((357,383),str(empresa),font=fonte_geral,fill='black')
-    desenhar.text((623,570),str(mes),font=fonte_geral,fill='black')
-
-    image.save(f'./{indice} {empresa} honorarios.png')
-
+    # Salvar a imagem com o nome sanitizado
+    image.save(f'./{indice}_{empresa_sanitizada}_honorarios.pdf')
