@@ -26,11 +26,15 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=2)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=39,max_row=42)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = 'oct/24'
     total = linha[21].value  # valor total calculado
+    recalc_fgts = 'RECALC.FGTS'
+    desconto = 'desconto'
+    descricao_outros= linha[20].value #descricao de outros
+    valor_outros = linha[18].value #valor do "outros"
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
 
@@ -57,10 +61,19 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=2)):
         desenhar.text((coordenada_inicial_empresa[0], coordenada_inicial_empresa[1] + i * altura_linha),
                       linha_empresa, font=fonte_geral, fill='black')
 
-    # Desenhar outros valores na imagem
+    #ver se o recibo contém algo além do honorário padrao.
+    if descricao_outros and 'RECALC. FGTS' in descricao_outros.strip():
+        desenhar.text((187,929), recalc_fgts, font=fonte_geral, fill='black')
+        desenhar.text((820,925), str(valor_outros), font=fonte_geral, fill='black')
+
+    if descricao_outros and 'DESCONTO' in descricao_outros.strip():
+        desenhar.text((187,929), desconto, font=fonte_geral, fill='black')
+        desenhar.text((820,925), str(valor_outros), font=fonte_geral, fill='black')
+
+     # Desenhar outros valores na imagem
     desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
     desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
-    desenhar.text((850, 1050), str(total), font=fonte_geral, fill='black')
+    desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
 
     # Salvar a imagem com o nome sanitizado
     image.save(f'./{empresa_sanitizada}_recibo.pdf')
