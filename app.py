@@ -1,5 +1,6 @@
 import openpyxl
 from PIL import Image, ImageDraw, ImageFont
+import os
 
 # Função para dividir o texto em várias linhas com base na largura máxima
 def quebra_texto(texto, fonte, largura_maxima, desenhar):
@@ -75,5 +76,14 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=14,max_row=14)
     desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
     desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
 
-    # Salvar a imagem com o nome sanitizado
-    image.save(f'./{empresa_sanitizada}_recibo.pdf')
+   # Definir o caminho para a pasta "Resultado"
+    pasta_resultado = os.path.join(os.path.expanduser("~"), "Desktop", "Resultado")
+
+    # Se você quiser garantir que o arquivo seja salvo lá
+    os.makedirs(pasta_resultado, exist_ok=True)
+
+    # ... [seu código anterior] ...
+
+    # Salvar a imagem com o nome sanitizado na pasta Resultado
+    caminho_arquivo = os.path.join(pasta_resultado, f'{empresa_sanitizada}_recibo.pdf')
+    image.save(caminho_arquivo)
