@@ -62,5 +62,5 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=2)):
     desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
     desenhar.text((850, 1050), str(total), font=fonte_geral, fill='black')
 
-    # Salvar a imagem c/ o nome sanitizado
-    image.save(f'./{indice}_{empresa_sanitizada}_honorarios.pdf')
+    # Salvar a imagem com o nome sanitizado
+    image.save(f'./{empresa_sanitizada}_recibo.pdf')
