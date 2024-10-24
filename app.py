@@ -27,10 +27,10 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=40,max_row=40)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
-    mes = 'oct/24'
+    mes = '10/24'
     total = linha[21].value  # valor total calculado
     recalc_fgts = 'RECALC.FGTS'
     desconto = 'DESCONTO'
@@ -39,15 +39,17 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
     simone = linha[23].value #linha p verificar se os recibos sao da simone ou n
     claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
     email = linha[25].value #linha p verificar se os recibos sao por email ou n
+    vencimento = '10/11/2024'
 
-    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
+    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
+    fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
 
-    image = Image.open('./honorario_padrao.jpg')
+    image = Image.open('./boleto_padrao.jpg')
     desenhar = ImageDraw.Draw(image)
 
     # Definir a largura máxima permitida para o nome da empresa
     largura_maxima_empresa = 800  # ajuste conforme necessário
-    coordenada_inicial_empresa = (340, 350)
+    coordenada_inicial_empresa = (75, 875)
 
     # Sanitizar o nome da empresa para evitar problemas ao salvar o arquivo
     empresa_sanitizada = empresa.replace("/", "").replace("\\", "").replace(":", "").replace("*", "")
@@ -67,17 +69,20 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
 
     #ver se o recibo contém algo além do honorário padrao.
     if descricao_outros and 'RECALC. FGTS' in descricao_outros.strip():
-        desenhar.text((187,929), recalc_fgts, font=fonte_geral, fill='black')
-        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
+        desenhar.text((650,230), recalc_fgts, font=fonte_mes, fill='black')
+        desenhar.text((775,230), str(valor_outros), font=fonte_mes, fill='black')
+        desenhar.text((945,795), recalc_fgts, font=fonte_mes, fill='black')
+        desenhar.text((1045,795), str(valor_outros)+',00', font=fonte_mes, fill='black')
 
     if descricao_outros and 'DESCONTO' in descricao_outros.strip():
-        desenhar.text((187,929), desconto, font=fonte_geral, fill='black')
-        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
+        desenhar.text((90,230), str(valor_outros)+',00', font=fonte_geral, fill='black')
 
      # Desenhar outros valores na imagem
-    desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
-    desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
-    desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
+    desenhar.text((1010, 189), 'R$'+ str(linha[21].value)+',00', font=fonte_geral, fill='black')
+    desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
+    desenhar.text((1010, 628), 'R$'+ str(linha[21].value)+',00', font=fonte_geral, fill='black')
+    desenhar.text((645,189), str(vencimento),font=fonte_geral,fill='black')
+    desenhar.text((75,282), empresa, font=fonte_geral,fill='black')
 
    # Definir o caminho para a pasta "Recibos"
     pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
