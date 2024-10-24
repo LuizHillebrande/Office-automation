@@ -27,7 +27,7 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=40,max_row=40)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = '10/24'
@@ -40,6 +40,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=40,max_row=40)
     claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
     email = linha[25].value #linha p verificar se os recibos sao por email ou n
     vencimento = '10/11/2024'
+    cnpj =linha[26].value
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
     fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
@@ -83,6 +84,8 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=40,max_row=40)
     desenhar.text((1010, 628), 'R$'+ str(linha[21].value)+',00', font=fonte_geral, fill='black')
     desenhar.text((645,189), str(vencimento),font=fonte_geral,fill='black')
     desenhar.text((75,282), empresa, font=fonte_geral,fill='black')
+    desenhar.text((75,305),str(cnpj),font=fonte_geral,fill='black')
+    desenhar.text((75,900),str(cnpj),font=fonte_geral,fill='black')
 
    # Definir o caminho para a pasta "Recibos"
     pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
@@ -104,14 +107,14 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=40,max_row=40)
 
     # Salvar a imagem com o nome sanitizado na pasta Resultado
     if simone and 'sim' in simone.strip():
-        caminho_arquivo = os.path.join(pasta_recibos_simone, f'{empresa_sanitizada}_recibo.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos_simone, f'{empresa_sanitizada}_boleto.pdf')
         image.save(caminho_arquivo)
     elif claudio and 'sim' in claudio.strip():
-        caminho_arquivo = os.path.join(pasta_recibos_claudio, f'{empresa_sanitizada}_recibo.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos_claudio, f'{empresa_sanitizada}_boleto.pdf')
         image.save(caminho_arquivo)
     elif email and 'sim' in email.strip():
-        caminho_arquivo=os.path.join(pasta_recibos_email, f'{empresa_sanitizada}_recibo.pdf')
+        caminho_arquivo=os.path.join(pasta_recibos_email, f'{empresa_sanitizada}_boleto.pdf')
         image.save(caminho_arquivo)
     else:
-        caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_recibo.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_boleto.pdf')
         image.save(caminho_arquivo)
