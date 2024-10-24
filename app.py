@@ -27,7 +27,7 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=14,max_row=14)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = 'oct/24'
@@ -36,6 +36,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=14,max_row=14)
     desconto = 'DESCONTO'
     descricao_outros= linha[20].value #descricao de outros
     valor_outros = 'R$'+ str(linha[18].value) #valor do "outros"
+    simone = linha[23].value #linha p verificar se os recibos sao da simone ou n
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
 
@@ -76,14 +77,21 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=14,max_row=14)
     desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
     desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
 
-   # Definir o caminho para a pasta "Resultado"
-    pasta_resultado = os.path.join(os.path.expanduser("~"), "Desktop", "Resultado")
+   # Definir o caminho para a pasta "Recibos"
+    pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
+    # Definir o caminho para a pasta "Recibos_Simone"
+    pasta_recibos_simone = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_Simone")
 
     # Se você quiser garantir que o arquivo seja salvo lá
-    os.makedirs(pasta_resultado, exist_ok=True)
+    os.makedirs(pasta_recibos, exist_ok=True)
+    os.makedirs(pasta_recibos_simone,exist_ok=True)
 
     # ... [seu código anterior] ...
 
     # Salvar a imagem com o nome sanitizado na pasta Resultado
-    caminho_arquivo = os.path.join(pasta_resultado, f'{empresa_sanitizada}_recibo.pdf')
-    image.save(caminho_arquivo)
+    if simone and 'sim' in simone.strip():
+        caminho_arquivo = os.path.join(pasta_recibos_simone, f'{empresa_sanitizada}_recibo.pdf')
+        image.save(caminho_arquivo)
+    else:
+        caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_recibo.pdf')
+        image.save(caminho_arquivo)
