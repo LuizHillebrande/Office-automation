@@ -37,6 +37,8 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
     descricao_outros= linha[20].value #descricao de outros
     valor_outros = 'R$'+ str(linha[18].value) #valor do "outros"
     simone = linha[23].value #linha p verificar se os recibos sao da simone ou n
+    claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
+    email = linha[25].value #linha p verificar se os recibos sao por email ou n
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
 
@@ -81,16 +83,29 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
     pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
     # Definir o caminho para a pasta "Recibos_Simone"
     pasta_recibos_simone = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_Simone")
+    # Definir o caminho para a pasta "Recibos_Claudio
+    pasta_recibos_claudio = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_Claudio")
+    # Definir o caminho para a pasta "Recibos_Email (sao enviados por email)
+    pasta_recibos_email = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_email")
+
+    
 
     # Se você quiser garantir que o arquivo seja salvo lá
     os.makedirs(pasta_recibos, exist_ok=True)
     os.makedirs(pasta_recibos_simone,exist_ok=True)
+    os.makedirs(pasta_recibos_claudio,exist_ok=True)
 
     # ... [seu código anterior] ...
 
     # Salvar a imagem com o nome sanitizado na pasta Resultado
     if simone and 'sim' in simone.strip():
         caminho_arquivo = os.path.join(pasta_recibos_simone, f'{empresa_sanitizada}_recibo.pdf')
+        image.save(caminho_arquivo)
+    elif claudio and 'sim' in claudio.strip():
+        caminho_arquivo = os.path.join(pasta_recibos_claudio, f'{empresa_sanitizada}_recibo.pdf')
+        image.save(caminho_arquivo)
+    elif email and 'sim' in email.strip():
+        caminho_arquivo=os.path.join(pasta_recibos_email, f'{empresa_sanitizada}_recibo.pdf')
         image.save(caminho_arquivo)
     else:
         caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_recibo.pdf')
