@@ -27,11 +27,11 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=31,max_row=35)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = '10/24'
-    total = linha[21].value  # valor total calculado
+    total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
     recalc_fgts = 'RECALC.FGTS'
     desconto = 'DESCONTO'
     descricao_outros= linha[20].value #descricao de outros
@@ -40,7 +40,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
     claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
     email = linha[25].value #linha p verificar se os recibos sao por email ou n
     vencimento = '10/11/2024'
-    cnpj =linha[26].value
+    cnpj = 'CNPJ '+str(linha[26].value)
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
     fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
@@ -79,9 +79,9 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
         desenhar.text((90,230), str(valor_outros)+',00', font=fonte_geral, fill='black')
 
      # Desenhar outros valores na imagem
-    desenhar.text((1010, 189), 'R$'+ str(linha[21].value)+',00', font=fonte_geral, fill='black')
+    desenhar.text((1018, 189), 'R$'+ str(linha[21].value if linha[21].value is not None else 0)+',00', font=fonte_geral, fill='black')
     desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
-    desenhar.text((1010, 628), 'R$'+ str(linha[21].value)+',00', font=fonte_geral, fill='black')
+    desenhar.text((1018, 628), 'R$'+ str(linha[21].value if linha[21].value is not None else 0)+',00', font=fonte_geral, fill='black')
     desenhar.text((645,189), str(vencimento),font=fonte_geral,fill='black')
     desenhar.text((75,282), empresa, font=fonte_geral,fill='black')
     desenhar.text((75,305),str(cnpj),font=fonte_geral,fill='black')
@@ -118,4 +118,3 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=94))
     else:
         caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_boleto.pdf')
         image.save(caminho_arquivo)
-        #salva tudo as imagens nos recibos
