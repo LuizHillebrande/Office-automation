@@ -27,7 +27,7 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=31,max_row=35)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=39,max_row=39)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = '10/24'
@@ -77,6 +77,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=31,max_row=35)
 
     if descricao_outros and 'DESCONTO' in descricao_outros.strip():
         desenhar.text((90,230), str(valor_outros)+',00', font=fonte_geral, fill='black')
+        desenhar.text((1018,670), str(valor_outros)+',00', font=fonte_geral, fill='black')
 
      # Desenhar outros valores na imagem
     desenhar.text((1018, 189), 'R$'+ str(linha[21].value if linha[21].value is not None else 0)+',00', font=fonte_geral, fill='black')
@@ -98,12 +99,11 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=31,max_row=35)
 
     
 
-    # Se você quiser garantir que o arquivo seja salvo lá
+    # garantir q o arquivo seja salvo
     os.makedirs(pasta_recibos, exist_ok=True)
     os.makedirs(pasta_recibos_simone,exist_ok=True)
     os.makedirs(pasta_recibos_claudio,exist_ok=True)
 
-    # ... [seu código anterior] ...
 
     # Salvar a imagem com o nome sanitizado na pasta Resultado
     if simone and 'sim' in simone.strip():
