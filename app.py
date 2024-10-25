@@ -150,4 +150,4 @@ texto_orientacao.pack(pady=10)
 botao_gerar = tk.Button(root, text="Gerar Boletos", command=gerar_boletos, font=fonte, bg="#4CAF50", fg="white")
 botao_gerar.pack(pady=10)
 
-root.mainloop()
+root.mainloop() #loop
