@@ -31,7 +31,7 @@ def gerar_boletos():
         wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
         sheet_honorarios = wb_honorarios['honorario']
 
-        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=94)):
+        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36, max_row=36)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = linha[2].value  # valor em R$
@@ -124,7 +124,6 @@ def gerar_boletos():
     except Exception as e:
         messagebox.showerror("Erro", str(e))
 
-# Configuração da interface gráfica
 def centralizar_janela(tamanho):
     largura, altura = tamanho
     x = (root.winfo_screenwidth() // 2) - (largura // 2)
@@ -150,4 +149,4 @@ texto_orientacao.pack(pady=10)
 botao_gerar = tk.Button(root, text="Gerar Boletos", command=gerar_boletos, font=fonte, bg="#4CAF50", fg="white")
 botao_gerar.pack(pady=10)
 
-root.mainloop() #loop final
+root.mainloop()
