@@ -115,4 +115,4 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36,max_row=46)
         image.save(caminho_arquivo)
     else:
         caminho_arquivo = os.path.join(pasta_boletos_wpp, f'{empresa_sanitizada}_boleto.pdf')
-        image.save(caminho_arquivo)
+        image.save(caminho_arquivo) #fim
