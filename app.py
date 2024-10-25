@@ -31,7 +31,7 @@ def gerar_boletos():
         wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
         sheet_honorarios = wb_honorarios['honorario']
 
-        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36, max_row=36)):
+        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=2)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = linha[2].value  # valor em R$
@@ -44,7 +44,7 @@ def gerar_boletos():
             simone = linha[23].value  # linha p verificar se os recibos sao da simone ou n
             claudio = linha[24].value  # linha p verificar se os recibos sao do claudio ou n
             email = linha[25].value  # linha p verificar se os recibos sao por email ou n
-            vencimento = '10/11/2024'
+            vencimento = '05/11/2024'
             cnpj = 'CNPJ ' + str(linha[26].value)
 
             fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
@@ -92,6 +92,7 @@ def gerar_boletos():
             desenhar.text((75, 282), empresa, font=fonte_geral, fill='black')
             desenhar.text((75, 305), str(cnpj), font=fonte_geral, fill='black')
             desenhar.text((75, 900), str(cnpj), font=fonte_geral, fill='black')
+            desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
 
             # Definir o caminho para as pastas
             pasta_boletos_wpp = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_Wpp")
