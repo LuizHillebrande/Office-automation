@@ -27,11 +27,11 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36,max_row=46)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=10)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
-    mes = '10/24'
-    total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
+    mes = 'oct/24'
+    total = linha[21].value  # valor total calculado
     recalc_fgts = 'RECALC.FGTS'
     desconto = 'DESCONTO'
     descricao_outros= linha[20].value #descricao de outros
@@ -39,18 +39,15 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36,max_row=46)
     simone = linha[23].value #linha p verificar se os recibos sao da simone ou n
     claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
     email = linha[25].value #linha p verificar se os recibos sao por email ou n
-    vencimento = '10/11/2024'
-    cnpj = 'CNPJ '+str(linha[26].value)
 
-    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
-    fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
+    fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
 
-    image = Image.open('./boleto_padrao.jpg')
+    image = Image.open('./honorario_padrao.jpg')
     desenhar = ImageDraw.Draw(image)
 
     # Definir a largura máxima permitida para o nome da empresa
     largura_maxima_empresa = 800  # ajuste conforme necessário
-    coordenada_inicial_empresa = (75, 875)
+    coordenada_inicial_empresa = (340, 350)
 
     # Sanitizar o nome da empresa para evitar problemas ao salvar o arquivo
     empresa_sanitizada = empresa.replace("/", "").replace("\\", "").replace(":", "").replace("*", "")
@@ -70,49 +67,46 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=36,max_row=46)
 
     #ver se o recibo contém algo além do honorário padrao.
     if descricao_outros and 'RECALC. FGTS' in descricao_outros.strip():
-        desenhar.text((650,230), recalc_fgts, font=fonte_mes, fill='black')
-        desenhar.text((775,230), str(valor_outros), font=fonte_mes, fill='black')
-        desenhar.text((945,795), recalc_fgts, font=fonte_mes, fill='black')
-        desenhar.text((1045,795), str(valor_outros)+',00', font=fonte_mes, fill='black')
+        desenhar.text((187,929), recalc_fgts, font=fonte_geral, fill='black')
+        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
 
     if descricao_outros and 'DESCONTO' in descricao_outros.strip():
-        desenhar.text((90,230), str(valor_outros)+',00', font=fonte_geral, fill='black')
-        desenhar.text((1018,670), str(valor_outros)+',00', font=fonte_geral, fill='black')
+        desenhar.text((187,929), desconto, font=fonte_geral, fill='black')
+        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
 
      # Desenhar outros valores na imagem
-    desenhar.text((1018, 189), 'R$'+ str(linha[21].value if linha[21].value is not None else 0)+',00', font=fonte_geral, fill='black')
-    desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
-    desenhar.text((1018, 628), 'R$'+ str(linha[21].value if linha[21].value is not None else 0)+',00', font=fonte_geral, fill='black')
-    desenhar.text((645,189), str(vencimento),font=fonte_geral,fill='black')
-    desenhar.text((75,282), empresa, font=fonte_geral,fill='black')
-    desenhar.text((75,305),str(cnpj),font=fonte_geral,fill='black')
-    desenhar.text((75,900),str(cnpj),font=fonte_geral,fill='black')
+    desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
+    desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
+    desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
 
    # Definir o caminho para a pasta "Recibos"
-    pasta_boletos_wpp = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_Wpp")
+    pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
     # Definir o caminho para a pasta "Recibos_Simone"
-    pasta_boletos_simone = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_Simone")
+    pasta_recibos_simone = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_Simone")
     # Definir o caminho para a pasta "Recibos_Claudio
-    pasta_boletos_claudio = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_Claudio")
+    pasta_recibos_claudio = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_Claudio")
     # Definir o caminho para a pasta "Recibos_Email (sao enviados por email)
-    pasta_boletos_email = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_email")
+    pasta_recibos_email = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos_email")
 
     
 
-    # garantir q o arquivo seja salvo
-    os.makedirs(pasta_boletos_wpp and pasta_boletos_simone and pasta_boletos_claudio and pasta_boletos_email, exist_ok=True)
+    # Se você quiser garantir que o arquivo seja salvo lá
+    os.makedirs(pasta_recibos, exist_ok=True)
+    os.makedirs(pasta_recibos_simone,exist_ok=True)
+    os.makedirs(pasta_recibos_claudio,exist_ok=True)
 
+    # ... [seu código anterior] ...
 
     # Salvar a imagem com o nome sanitizado na pasta Resultado
     if simone and 'sim' in simone.strip():
-        caminho_arquivo = os.path.join(pasta_boletos_simone, f'{empresa_sanitizada}_boleto.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos_simone, f'{empresa_sanitizada}_recibo.pdf')
         image.save(caminho_arquivo)
     elif claudio and 'sim' in claudio.strip():
-        caminho_arquivo = os.path.join(pasta_boletos_claudio, f'{empresa_sanitizada}_boleto.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos_claudio, f'{empresa_sanitizada}_recibo.pdf')
         image.save(caminho_arquivo)
     elif email and 'sim' in email.strip():
-        caminho_arquivo=os.path.join(pasta_boletos_email, f'{empresa_sanitizada}_boleto.pdf')
+        caminho_arquivo=os.path.join(pasta_recibos_email, f'{empresa_sanitizada}_recibo.pdf')
         image.save(caminho_arquivo)
     else:
-        caminho_arquivo = os.path.join(pasta_boletos_wpp, f'{empresa_sanitizada}_boleto.pdf')
+        caminho_arquivo = os.path.join(pasta_recibos, f'{empresa_sanitizada}_recibo.pdf')
         image.save(caminho_arquivo)
