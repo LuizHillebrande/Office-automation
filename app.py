@@ -31,7 +31,7 @@ def gerar_boletos():
         wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
         sheet_honorarios = wb_honorarios['honorario']
 
-        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=2)):
+        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=20)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = linha[2].value  # valor em R$
