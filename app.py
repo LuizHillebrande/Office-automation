@@ -101,10 +101,8 @@ def gerar_boletos():
             pasta_boletos_email = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_email")
 
             # garantir que as pastas existam
-            os.makedirs(pasta_boletos_wpp, exist_ok=True)
-            os.makedirs(pasta_boletos_simone, exist_ok=True)
-            os.makedirs(pasta_boletos_claudio, exist_ok=True)
-            os.makedirs(pasta_boletos_email, exist_ok=True)
+            os.makedirs(pasta_boletos_wpp and pasta_boletos_simone and pasta_boletos_claudio and pasta_boletos_email, exist_ok=True) #arrumada
+    
 
             # Salvar a imagem com o nome sanitizado na pasta correspondente
             if simone and 'sim' in simone.strip():
