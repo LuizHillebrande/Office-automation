@@ -7,7 +7,7 @@ sheet_alteracoes = wb_alteracoes['alteracoes']
 
 
 
-for indice, linha in enumerate(sheet_alteracoes.iter_rows(min_row=2,max_row=10)):
+for indice, linha in enumerate(sheet_alteracoes.iter_rows(min_row=4,max_row=4)):
 
     #BOLETOS DE ALTERACOES
     empresa_alteracoes =linha[0].value #nome da empresa
