@@ -25,17 +25,18 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 
     return linhas
 
+
 def gerar_boletos():
     try:
         # Carregando a planilha com os valores calculados das fórmulas
         wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
         sheet_honorarios = wb_honorarios['honorario']
 
-        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=55, max_row=70)):
+        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=90)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = linha[2].value  # valor em R$
-            mes = '10/24'
+            mes = '10/24, '
             total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
             recalc_fgts = 'RECALC.FGTS'
             desconto = 'DESCONTO'
@@ -47,6 +48,8 @@ def gerar_boletos():
             vencimento = '05/11/2024'
             cnpj = 'CNPJ ' + str(linha[26].value)
             alteracao = 'ALTERACAO CONTRATUAL'
+            cpf = 'CPF ' + str(linha[27].value)
+            tem_CPF = linha[28].value
 
             fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
             fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
@@ -78,25 +81,40 @@ def gerar_boletos():
             if descricao_outros and 'RECALC. FGTS' in descricao_outros.strip():
                 desenhar.text((650, 230), recalc_fgts, font=fonte_mes, fill='black')
                 desenhar.text((775, 230), str(valor_outros), font=fonte_mes, fill='black')
-                desenhar.text((928, 795), recalc_fgts, font=fonte_mes, fill='black')
-                desenhar.text((1030, 795), str(valor_outros) + ',00', font=fonte_mes, fill='black')
+                desenhar.text((65, 795), recalc_fgts, font=fonte_mes, fill='black')
+                desenhar.text((170,795), str(valor_outros) + ',00', font=fonte_mes, fill='black')
 
             if descricao_outros and 'DESCONTO' in descricao_outros.strip():
-                desenhar.text((90, 230), str(valor_outros) + ',00', font=fonte_geral, fill='black')
-                desenhar.text((1018, 670), str(valor_outros) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((65, 795), str(valor_outros) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((155, 795), str(valor_outros) + ',00', font=fonte_geral, fill='black')
 
             if descricao_outros and 'ALTERACAO' in descricao_outros.strip():
-                desenhar.text((825, 795), alteracao, font=fonte_mes, fill='black')
-                desenhar.text((1030, 795), str(valor_outros) + ',00', font=fonte_mes, fill='black')
+                desenhar.text((65,795), alteracao, font=fonte_mes, fill='black')
+                desenhar.text((255, 795), str(valor_outros) + ',00', font=fonte_mes, fill='black')
 
-            # Desenhar outros valores na imagem
-            desenhar.text((1018, 189), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
-            desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
-            desenhar.text((1018, 628), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
-            desenhar.text((645, 189), str(vencimento), font=fonte_geral, fill='black')
-            desenhar.text((75, 282), empresa, font=fonte_geral, fill='black')
-            desenhar.text((75, 305), str(cnpj), font=fonte_geral, fill='black')
-            desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
+            
+
+            if tem_CPF and 'sim' in tem_CPF.strip():
+                desenhar.text((75, 305), str(cpf), font=fonte_geral, fill='black')
+                desenhar.text((1018, 189), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
+                desenhar.text((1018, 628), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((645, 189), str(vencimento), font=fonte_geral, fill='black')
+                desenhar.text((75, 282), empresa, font=fonte_geral, fill='black')
+                desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
+                desenhar.text((318,776),'R$ '+ str(linha[2].value),font=fonte_geral,fill='black')
+
+            else:
+                # Desenhar outros valores na imagem
+                desenhar.text((1018, 189), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((271, 776), str(mes), font=fonte_mes, fill='black')
+                desenhar.text((1018, 628), 'R$' + str(linha[21].value if linha[21].value is not None else 0) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((645, 189), str(vencimento), font=fonte_geral, fill='black')
+                desenhar.text((75, 282), empresa, font=fonte_geral, fill='black')
+                desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
+                desenhar.text((318,776),'R$ '+ str(linha[2].value),font=fonte_geral,fill='black')
+                desenhar.text((75, 305), str(cnpj), font=fonte_geral, fill='black')
+            
 
             # Definir o caminho para as pastas
             pasta_boletos_wpp = os.path.join(os.path.expanduser("~"), "Desktop", "Boletos_Wpp")
