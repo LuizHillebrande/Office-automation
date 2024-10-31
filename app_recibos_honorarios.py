@@ -27,7 +27,7 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
 wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
 sheet_honorarios = wb_honorarios['honorario']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=92,max_row=92)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=59,max_row=59)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = 'oct/24'
@@ -39,6 +39,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=92,max_row=92)
     simone = linha[23].value #linha p verificar se os recibos sao da simone ou n
     claudio = linha[24].value #linha p verificar se os recibos sao do claudio ou n
     email = linha[25].value #linha p verificar se os recibos sao por email ou n
+    alteracao = 'ALTERACAO CONTRATUAL'
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
 
@@ -73,6 +74,9 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=92,max_row=92)
     if descricao_outros and 'DESCONTO' in descricao_outros.strip():
         desenhar.text((187,929), desconto, font=fonte_geral, fill='black')
         desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
+
+    if descricao_outros and 'ALTERACAO' in descricao_outros.strip():
+        desenhar.text((785,850), str(valor_outros), font=fonte_geral, fill='black')
 
      # Desenhar outros valores na imagem
     desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
