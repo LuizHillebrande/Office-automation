@@ -35,7 +35,7 @@ def gerar_boletos():
         for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=90)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
-            valor = linha[2].value  # valor em R$
+            valor = linha[2].value + ',00'  # valor em R$
             mes = '10/24, '
             total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
             recalc_fgts = 'RECALC.FGTS'

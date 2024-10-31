@@ -24,10 +24,10 @@ def quebra_texto(texto, fonte, largura_maxima, desenhar):
     return linhas
 
 # Carregando a planilha com os valores calculados das fórmulas
-wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
-sheet_honorarios = wb_honorarios['honorario']
+wb_honorarios = openpyxl.load_workbook('relacao_recibos.xlsx', data_only=True)
+sheet_honorarios = wb_honorarios['recibo']
 
-for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=59,max_row=59)):
+for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2,max_row=90)):
     empresa = linha[1].value  # nome da empresa
     valor = linha[2].value  # valor em R$
     mes = 'oct/24'
@@ -42,6 +42,7 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=59,max_row=59)
     alteracao = 'ALTERACAO CONTRATUAL'
 
     fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 50)
+    fonte_menor = ImageFont.truetype('./Roboto-MediumItalic.ttf', 40)
 
     image = Image.open('./honorario_padrao.jpg')
     desenhar = ImageDraw.Draw(image)
@@ -69,19 +70,19 @@ for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=59,max_row=59)
     #ver se o recibo contém algo além do honorário padrao.
     if descricao_outros and 'RECALC. FGTS' in descricao_outros.strip():
         desenhar.text((187,929), recalc_fgts, font=fonte_geral, fill='black')
-        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
+        desenhar.text((795,935), str(valor_outros)+',00', font=fonte_menor, fill='black')
 
     if descricao_outros and 'DESCONTO' in descricao_outros.strip():
         desenhar.text((187,929), desconto, font=fonte_geral, fill='black')
-        desenhar.text((795,925), str(valor_outros), font=fonte_geral, fill='black')
+        desenhar.text((795,935), str(valor_outros)+',00', font=fonte_menor, fill='black')
 
     if descricao_outros and 'ALTERACAO' in descricao_outros.strip():
-        desenhar.text((785,850), str(valor_outros), font=fonte_geral, fill='black')
+        desenhar.text((785,860), str(valor_outros)+',00', font=fonte_menor, fill='black')
 
      # Desenhar outros valores na imagem
-    desenhar.text((840, 550), str(valor), font=fonte_geral, fill='black')
+    desenhar.text((840, 560), str(valor), font=fonte_menor, fill='black')
     desenhar.text((610, 550), str(mes), font=fonte_geral, fill='black')
-    desenhar.text((835, 1045), str(total), font=fonte_geral, fill='black')
+    desenhar.text((835, 1055), str(total), font=fonte_menor, fill='black')
 
    # Definir o caminho para a pasta "Recibos"
     pasta_recibos = os.path.join(os.path.expanduser("~"), "Desktop", "Recibos")
