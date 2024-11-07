@@ -35,7 +35,7 @@ def gerar_boletos():
         for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=90)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
-            valor = linha[2].value + ',00'  # valor em R$
+            valor = str(linha[2].value) + ',00'  # valor em R$
             mes = '10/24, '
             total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
             recalc_fgts = 'RECALC.FGTS'
@@ -45,7 +45,7 @@ def gerar_boletos():
             simone = linha[23].value  # linha p verificar se os recibos sao da simone ou n
             claudio = linha[24].value  # linha p verificar se os recibos sao do claudio ou n
             email = linha[25].value  # linha p verificar se os recibos sao por email ou n
-            vencimento = '05/11/2024'
+            vencimento = '07/11/2024'
             cnpj = 'CNPJ ' + str(linha[26].value)
             alteracao = 'ALTERACAO CONTRATUAL'
             cpf = 'CPF ' + str(linha[27].value)
@@ -85,8 +85,8 @@ def gerar_boletos():
                 desenhar.text((170,795), str(valor_outros) + ',00', font=fonte_mes, fill='black')
 
             if descricao_outros and 'DESCONTO' in descricao_outros.strip():
-                desenhar.text((65, 795), str(valor_outros) + ',00', font=fonte_geral, fill='black')
-                desenhar.text((155, 795), str(valor_outros) + ',00', font=fonte_geral, fill='black')
+                desenhar.text((65, 795), str(desconto), font=fonte_geral, fill='black')
+                desenhar.text((170, 795), str(valor_outros) + ',00', font=fonte_geral, fill='black')
 
             if descricao_outros and 'ALTERACAO' in descricao_outros.strip():
                 desenhar.text((65,795), alteracao, font=fonte_mes, fill='black')
