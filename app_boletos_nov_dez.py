@@ -32,7 +32,7 @@ def gerar_boletos():
         wb_honorarios = openpyxl.load_workbook('relacao_honorarios.xlsx', data_only=True)
         sheet_honorarios = wb_honorarios['honorario']
 
-        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=70, max_row=70)):
+        for indice, linha in enumerate(sheet_honorarios.iter_rows(min_row=2, max_row=91)):
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = str(linha[2].value) + ',00'  # valor em R$
@@ -50,11 +50,12 @@ def gerar_boletos():
             alteracao = 'ALTERACAO CONTRATUAL'
             cpf = 'CPF ' + str(linha[27].value)
             tem_CPF = linha[28].value
+            primeira_parcela_13=  'R$'+ ' '+str(linha[4].value)
 
             fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
             fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
 
-            image = Image.open('./boleto_padrao.jpg')
+            image = Image.open('./boleto_fim_de_ano.jpg')
             desenhar = ImageDraw.Draw(image)
 
             # Definir a largura máxima permitida para o nome da empresa
@@ -114,6 +115,7 @@ def gerar_boletos():
                 desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
                 desenhar.text((318,776),'R$ '+ str(linha[2].value),font=fonte_geral,fill='black')
                 desenhar.text((75, 305), str(cnpj), font=fonte_geral, fill='black')
+                desenhar.text((472,827),str(primeira_parcela_13),font=fonte_geral,fill='black')
             
 
             # Definir o caminho para as pastas
