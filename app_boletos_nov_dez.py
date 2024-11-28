@@ -36,7 +36,7 @@ def gerar_boletos():
             # BOLETOS DE HONORARIOS
             empresa = linha[1].value  # nome da empresa
             valor = str(linha[2].value) + ',00'  # valor em R$
-            mes = '10/24, '
+            mes = linha[29].value
             total = linha[21].value if linha[21].value is not None else 0  # valor total calculado
             recalc_fgts = 'RECALC.FGTS'
             desconto = 'DESCONTO'
@@ -51,6 +51,7 @@ def gerar_boletos():
             cpf = 'CPF ' + str(linha[27].value)
             tem_CPF = linha[28].value
             primeira_parcela_13=  'R$'+ ' '+str(linha[4].value)
+
 
             fonte_geral = ImageFont.truetype('./Roboto-MediumItalic.ttf', 16)
             fonte_mes = ImageFont.truetype('./Roboto-MediumItalic.ttf', 15)
@@ -113,7 +114,7 @@ def gerar_boletos():
                 desenhar.text((645, 189), str(vencimento), font=fonte_geral, fill='black')
                 desenhar.text((75, 282), empresa, font=fonte_geral, fill='black')
                 desenhar.text((1003,516),str(vencimento),font=fonte_geral,fill='black')
-                desenhar.text((318,776),'R$ '+ str(linha[2].value),font=fonte_geral,fill='black')
+                desenhar.text((353,776),'R$ '+ str(linha[2].value),font=fonte_geral,fill='black')
                 desenhar.text((75, 305), str(cnpj), font=fonte_geral, fill='black')
                 desenhar.text((472,827),str(primeira_parcela_13),font=fonte_geral,fill='black')
             
