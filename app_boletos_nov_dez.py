@@ -45,7 +45,7 @@ def gerar_boletos():
             simone = linha[23].value  # linha p verificar se os recibos sao da simone ou n
             claudio = linha[24].value  # linha p verificar se os recibos sao do claudio ou n
             email = linha[25].value  # linha p verificar se os recibos sao por email ou n
-            vencimento = '10/11/2024'
+            vencimento = linha[29].value
             cnpj = 'CNPJ ' + str(linha[26].value)
             alteracao = 'ALTERACAO CONTRATUAL'
             cpf = 'CPF ' + str(linha[27].value)
